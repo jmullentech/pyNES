@@ -46,7 +46,7 @@ class MainForm(npyscreen.FormBaseNew):
 
         y, x = self.useable_space()
 
-        self.InstructText = self.add(InstructText, name="Instructions", value = "Use A/B to scroll, select your game and press START to launch!", max_height=y // 8, editable=False)
+        self.InstructText = self.add(InstructText, name="Instructions", value = "Use A/B to scroll, SELECT your game and press START to launch!", max_height=y // 8, editable=False)
         self.Browser = self.add(Browser, name="Available ROMs", editable=True, values=gameList, footer="ROMs LOADED!")
 
     def exit_func(self, _input):
@@ -57,11 +57,20 @@ class MainForm(npyscreen.FormBaseNew):
     	
     	# Docs for npyscreen suck. This is the best I could do. You can probably do better.
 
+    	# Convert returned list index value to its associated list value
+    	# ie, convert "21" to the full $PATH for selected game of matching value "21"
     	indexedVal = [self.Browser.values[idx] for idx in self.Browser.value]
+    	
+    	# Convert resulting list value to a string that can be parsed by subprocess
     	selectedROM = ''.join(map(str, indexedVal))
     	#logger.debug('ROM selected: %s', selectedROM)
-    	# Very basic. Will tweak later.
+    	
+    	# Very basic! Will tweak later.
+    	# Simply opens the selected ROM via FCEUX
     	subprocess.Popen(["fceux", selectedROM])
+    	
+    	## TODO
+    	# Clear/clean/redraw screen and allow re-entry when done with your ROM
 
 	def quit_menu(self, _input):
 		exit(0)
