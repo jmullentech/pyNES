@@ -5,9 +5,9 @@ I've always wanted a straightforward way to launch NES ROMs on a Pi, without the
 # Prerequisites 
 
  - Python 2.7 + pip
- - npyscreen (pip)
+ - npyscreen (*via pip*)
  - FCEUX
- - antimicro or joy2key
+ - antimicro or joy2key (*antimicro config included*)
 		 
 *NOTE: I'm using FCEUX but you can modify the script to utilize whatever emulator you prefer*
 
