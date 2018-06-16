@@ -6,11 +6,12 @@ import subprocess
 import fnmatch
 import npyscreen, curses
 import logging
-import re
 
-logging.basicConfig(level=logging.DEBUG, filename='tst.log')
-logger = logging.getLogger()
+# NOT NEEDED
+#logging.basicConfig(level=logging.DEBUG, filename='tst.log')
+#logger = logging.getLogger()
 
+# CHANGE THIS TO MATCH YOUR ROM $PATH
 rompath = '/home/john/NES/ROMs'
 
 gameList = []
@@ -19,11 +20,9 @@ for root, dirnames, filenames in os.walk(rompath):
         gameList.append(os.path.join(root, filename))
         gameList.sort()
 
-        #avail = len(gameList)
-
 class App(npyscreen.StandardApp):
     def onStart(self):
-        self.addForm("MAIN", MainForm, name="Welcome to pyNES v0.1a!")
+        self.addForm("MAIN", MainForm, name="Welcome to pyNES v0.2a!")
 
 class InstructText(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLineEdit
@@ -34,6 +33,10 @@ class MainForm(npyscreen.FormBaseNew):
     def create(self): 
         
     	self.add_event_hander("exit_func", self.exit_func)
+        
+    	# I'm using 'CTRL-F' and 'r' here but you can change this to whatever you want
+    	# Joy2Key makes this possible
+
         new_handlers = {
 			 "^F":              self.exit_func,
 			 "r":				self.launch_game,
@@ -51,18 +54,17 @@ class MainForm(npyscreen.FormBaseNew):
         exit(0)
 
     def launch_game(self, _input):
-    	#indexVal = self.Browser.value
+    	
+    	# Docs for npyscreen suck. This is the best I could do. You can probably do better.
 
     	indexedVal = [self.Browser.values[idx] for idx in self.Browser.value]
     	selectedROM = ''.join(map(str, indexedVal))
-
-    	logger.debug('ROM selected: %s', selectedROM)
-
+    	#logger.debug('ROM selected: %s', selectedROM)
+    	# Very basic. Will tweak later.
     	subprocess.Popen(["fceux", selectedROM])
 
 	def quit_menu(self, _input):
 		exit(0)
-
 
 pyNES = App()
 pyNES.run()
