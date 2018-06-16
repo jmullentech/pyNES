@@ -2,8 +2,14 @@
 # encoding: utf-8
 
 import sys, os
+import subprocess
 import fnmatch
 import npyscreen, curses
+import logging
+import re
+
+logging.basicConfig(level=logging.DEBUG, filename='tst.log')
+logger = logging.getLogger()
 
 rompath = '/home/john/NES/ROMs'
 
@@ -11,6 +17,9 @@ gameList = []
 for root, dirnames, filenames in os.walk(rompath):
     for filename in fnmatch.filter(filenames, '*.nes'):
         gameList.append(os.path.join(root, filename))
+        gameList.sort()
+
+        #avail = len(gameList)
 
 class App(npyscreen.StandardApp):
     def onStart(self):
@@ -20,19 +29,40 @@ class InstructText(npyscreen.BoxTitle):
     _contained_widget = npyscreen.MultiLineEdit
 
 class Browser(npyscreen.BoxTitle):
-    _contained_widget = npyscreen.MultiLineAction
-
+    _contained_widget = npyscreen.SelectOne
 class MainForm(npyscreen.FormBaseNew):
-    def create(self):
+    def create(self): 
         
+    	self.add_event_hander("exit_func", self.exit_func)
+        new_handlers = {
+			 "^F":              self.exit_func,
+			 "r":				self.launch_game,
+        }
+
+        self.add_handlers(new_handlers)
+
         y, x = self.useable_space()
 
-        self.InstructText = self.add(InstructText, name="Instructions", value = "Just select your game and press START to launch!", max_height=y // 8, editable=False)
-        self.Browser = self.add(Browser, name="Available ROMs", editable=True)
+        self.InstructText = self.add(InstructText, name="Instructions", value = "Use A/B to scroll, select your game and press START to launch!", max_height=y // 8, editable=False)
+        self.Browser = self.add(Browser, name="Available ROMs", editable=True, values=gameList, footer="ROMs LOADED!")
 
     def exit_func(self, _input):
         curses.beep()
         exit(0)
+
+    def launch_game(self, _input):
+    	#indexVal = self.Browser.value
+
+    	indexedVal = [self.Browser.values[idx] for idx in self.Browser.value]
+    	selectedROM = ''.join(map(str, indexedVal))
+
+    	logger.debug('ROM selected: %s', selectedROM)
+
+    	subprocess.Popen(["fceux", selectedROM])
+
+	def quit_menu(self, _input):
+		exit(0)
+
 
 pyNES = App()
 pyNES.run()
