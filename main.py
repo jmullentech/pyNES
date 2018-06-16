@@ -38,8 +38,8 @@ class MainForm(npyscreen.FormBaseNew):
     	# Joy2Key makes this possible
 
         new_handlers = {
-			 "^F":              self.exit_func,
-			 "r":				self.launch_game,
+			 "^F":	self.exit_func,
+			 "r":	self.launch_game,
         }
 
         self.add_handlers(new_handlers)
