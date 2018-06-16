@@ -13,6 +13,6 @@ I've always wanted a straightforward way to launch NES ROMs on a Pi, without the
 
 ## Installation & Usage
 
-Just place the file in the directory of your choice and execute it with `python2.7 pyNES.py`
+Just place the file in the directory of your choice and execute it with `python2.7 main.py`
 
 Just remember to modify the values inside the script to match your ROM $PATH
